@@ -37,32 +37,34 @@ def test_2d_verts(square_points):
 
 
 @given(floats(0.1, 1000))
-def radius_getter_setter_tests(r, square_points):
+def test_radius_getter_setter(square_points, r):
     """Test getting and setting the radius."""
     square_points = square_points[:, :2]
-    convexspheropolygon = ConvexSpheropolygon(square_points, r)
+    convexspheropolygon = ConvexSpheropolygon(square_points, radius=r)
     assert convexspheropolygon.radius == r
     convexspheropolygon.radius = r + 1
     assert convexspheropolygon.radius == r + 1
-    with pytest.raises(ValueError):
-        convexspheropolygon.radius = "invalid value"
 
 
 @given(floats(-1000, -1))
-def invalid_radius_tests(r, square_points):
-    """Test getting and setting the radius."""
+def test_invalid_radius(square_points, r):
+    """Test invalid radius."""
     square_points = square_points[:, :2]
     with pytest.raises(ValueError):
-        ConvexSpheropolygon(square_points, r)
+        ConvexSpheropolygon(square_points, radius=r)
+    with pytest.raises(TypeError):
+        ConvexSpheropolygon(square_points, radius="invalid value")
 
 
 @given(floats(-1000, -1))
-def invalid_radius_setter_tests(r, square_points):
-    """Test getting and setting the radius."""
+def test_invalid_radius_setter(square_points, r):
+    """Test setting an invalid radius."""
     square_points = square_points[:, :2]
-    spheropolygon = ConvexSpheropolygon(square_points, 1)
+    spheropolygon = ConvexSpheropolygon(square_points, radius=1)
     with pytest.raises(ValueError):
         spheropolygon.radius = r
+    with pytest.raises(TypeError):
+        spheropolygon.radius = "invalid value"
 
 
 def test_duplicate_points(square_points):
